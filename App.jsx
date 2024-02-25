@@ -4,6 +4,9 @@ import Player from "./components/Player.jsx";
 import GameBoard from "./components/GameBoard.jsx";
 import Log from "./components/Log.jsx";
 
+// hard coded winning combinations
+import { WINNING_COMBINATIONS } from "./winning-combinations.js";
+
 function deriveActivePlayer(gameTurns) {
   // get active player from game turns:
   let currentPlayer = "X";
