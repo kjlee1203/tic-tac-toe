@@ -7,6 +7,12 @@ import Log from "./components/Log.jsx";
 // hard coded winning combinations
 import { WINNING_COMBINATIONS } from "./winning-combinations.js";
 
+const initialGameBoard = [
+  [null, null, null],
+  [null, null, null],
+  [null, null, null],
+];
+
 function deriveActivePlayer(gameTurns) {
   // get active player from game turns:
   let currentPlayer = "X";
@@ -21,6 +27,34 @@ function App() {
   // need to lift the state up
   const [gameTurns, setGameTurns] = useState([]);
   const activePlayer = deriveActivePlayer(gameTurns);
+
+  // lifted up from GameBoard.jsx
+  let gameBoard = initialGameBoard;
+  for (const turn of gameTurns) {
+    const { square, player } = turn;
+    const { row, col } = square;
+
+    gameBoard[row][col] = player;
+  }
+
+  let winner;
+  // check winning combinations
+  for (const combination of WINNING_COMBINATIONS) {
+    const firstSquareSymbol =
+      gameBoard[combination[0].row][combination[0].column];
+    const secondSquareSymbol =
+      gameBoard[combination[1].row][combination[1].column];
+    const thirdSquareSymbol =
+      gameBoard[combination[2].row][combination[2].column];
+
+    if (
+      firstSquareSymbol &&
+      firstSquareSymbol == secondSquareSymbol &&
+      firstSquareSymbol == thirdSquareSymbol
+    ) {
+      winner = firstSquareSymbol;
+    }
+  }
 
   /* We now derive active player from gameTurns, we dont need this anymore:
   // to pass info of which player is active
@@ -67,7 +101,9 @@ function App() {
             isActive={activePlayer === "O"}
           />
         </ol>
-        <GameBoard onSelectSquare={handleSelectSquare} turns={gameTurns} />
+        {winner && <p>You won, {winner}!</p>}
+        {/*<GameBoard onSelectSquare={handleSelectSquare} turns={gameTurns} />*/}
+        <GameBoard onSelectSquare={handleSelectSquare} board={gameBoard} />
       </div>
       <Log turns={gameTurns} />
     </main>
