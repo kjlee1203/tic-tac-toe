@@ -5,8 +5,23 @@ const initialGameBoard = [
   [null, null, null],
   [null, null, null],
 ];
+export default function GameBoard({ onSelectSquare, turns }) {
+  // make gameBoard from the log (turns)
+  // I think it can prevent multiple clicks on the same square because
+  // turns (log) goes from newest to oldest
+  // so eventually the sign returns to original (oldest) one
+  let gameBoard = initialGameBoard;
+  for (const turn of turns) {
+    const { square, player } = turn;
+    const { row, col } = square;
 
-export default function GameBoard({ onSelectSquare, activePlayerSymbol }) {
+    gameBoard[row][col] = player;
+  }
+  //export default function GameBoard({ onSelectSquare, activePlayerSymbol }) {
+  // we'll lift the state up to App.jsx
+  // because this info is needed both for GameBoard and log.
+
+  /*
   const [gameBoard, setGameBoard] = useState(initialGameBoard);
 
   function handleSelectSquare(rowIndex, colIndex) {
@@ -18,13 +33,11 @@ export default function GameBoard({ onSelectSquare, activePlayerSymbol }) {
       ];
       updatedBoard[rowIndex][colIndex] = activePlayerSymbol;
 
-      console.log(activePlayerSymbol);
-
       return updatedBoard;
     });
     onSelectSquare(); // comming from App.jsx
   }
-
+*/
   return (
     <ol id="game-board">
       {gameBoard.map((row, rowIndex) => (
@@ -32,7 +45,7 @@ export default function GameBoard({ onSelectSquare, activePlayerSymbol }) {
           <ol>
             {row.map((playerSymbol, colIndex) => (
               <li key={colIndex}>
-                <button onClick={() => handleSelectSquare(rowIndex, colIndex)}>
+                <button onClick={() => onSelectSquare(rowIndex, colIndex)}>
                   {playerSymbol}
                 </button>
               </li>

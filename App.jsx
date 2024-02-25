@@ -2,16 +2,36 @@ import { useState } from "react";
 
 import Player from "./components/Player.jsx";
 import GameBoard from "./components/GameBoard.jsx";
+import Log from "./components/Log.jsx";
 
 function App() {
+  // to make a log. but the info is generated in GameBoard
+  // need to lift the state up
+  const [gameTurns, setGameTurns] = useState([]);
+
   // to pass info of which player is active
   // to both Player and GameBoard
   // initial active player is 'X'
   const [activePlayer, setActivePlayer] = useState("X");
 
-  function handleSelectSquare() {
+  function handleSelectSquare(rowIndex, colIndex) {
     // if active player is x, change it into o, or vice versa
     setActivePlayer((curActivePlayer) => (curActivePlayer === "X" ? "O" : "X"));
+    setGameTurns((prevTurns) => {
+      // current player is X in the first turn.
+      let currentPlayer = "X";
+      // latest turn is stored in [0] of the array.
+      if (prevTurns.length > 0 && prevTurns[0].player === "X") {
+        currentPlayer = "O";
+      }
+
+      const updatedTurns = [
+        { square: { row: rowIndex, col: colIndex }, player: activePlayer },
+        ...prevTurns,
+      ];
+
+      return updatedTurns; // update gameTurns state.
+    });
   }
 
   return (
@@ -29,12 +49,9 @@ function App() {
             isActive={activePlayer === "O"}
           />
         </ol>
-        <GameBoard
-          onSelectSquare={handleSelectSquare}
-          activePlayerSymbol={activePlayer}
-        />
+        <GameBoard onSelectSquare={handleSelectSquare} turns={gameTurns} />
       </div>
-      LOG
+      <Log />
     </main>
   );
 }

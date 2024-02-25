@@ -1,6 +1,7 @@
 import { useState } from "react";
 
 export default function Player({ initialName, symbol, isActive }) {
+  // player name
   const [playerName, setPlayerName] = useState(initialName);
   // whether we are editing the player or not
   const [isEditing, setIsEditing] = useState(false);
