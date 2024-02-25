@@ -3,6 +3,7 @@ import { useState } from "react";
 import Player from "./components/Player.jsx";
 import GameBoard from "./components/GameBoard.jsx";
 import Log from "./components/Log.jsx";
+import GameOver from "./components/GameOver.jsx";
 
 // hard coded winning combinations
 import { WINNING_COMBINATIONS } from "./winning-combinations.js";
@@ -56,6 +57,9 @@ function App() {
     }
   }
 
+  // Draw: 9 turns and we have no winner
+  const hasDraw = gameTurns.length === 9 && !winner;
+
   /* We now derive active player from gameTurns, we dont need this anymore:
   // to pass info of which player is active
   // to both Player and GameBoard
@@ -101,7 +105,7 @@ function App() {
             isActive={activePlayer === "O"}
           />
         </ol>
-        {winner && <p>You won, {winner}!</p>}
+        {(winner || hasDraw) && <GameOver winner={winner} />}
         {/*<GameBoard onSelectSquare={handleSelectSquare} turns={gameTurns} />*/}
         <GameBoard onSelectSquare={handleSelectSquare} board={gameBoard} />
       </div>
